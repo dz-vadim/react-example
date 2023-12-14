@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 #root { 
-    background: #6494f3;
+    background: #e9fed2;
     display: flex;
     justify-content: center;
 }
@@ -18,4 +18,11 @@
     margin-top: 15px;
     justify-content: space-between;
     align-items: center;
+}
+.delete__btn {
+    background: transparent;
+    color: teal;
+    padding: 5px;
+    border: 2px solid red;
+    border-radius: 0.5rem;
 }

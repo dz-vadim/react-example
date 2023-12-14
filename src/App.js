@@ -1,20 +1,55 @@
-import React, { useState } from "react";
-import Counter from "./components/Counter";
-import ClassCounter from "./components/ClassCounter";
-import "./styles/App.css"
-import PostItem from "./components/PostItem";
+import React, { useMemo, useState } from "react";
+import "./styles/App.css";
 import PostList from "./components/PostList";
+import PostForm from "./components/PostForm";
+import MySelect from "./components/UI/select/MySelect";
+import MyInput from "./components/UI/input/MyInput";
+import PostFilter from "./components/PostFilter";
+import MyModal from "./components/UI/MyModal/MyModal";
+import MyButton from "./components/UI/button/MyButton";
 function App() {
   const [posts, setPosts] = useState([
-    {id: 1, title: "Title text 1", body: "Description"},
-    {id: 2, title: "Title text 2", body: "Description"},
-    {id: 3, title: "Title text 3", body: "Description"},
-  ])
+    { id: 1, title: "First text", body: "First  description" },
+    { id: 2, title: "Second text", body: "Text Description" },
+    { id: 3, title: "Some enother text", body: "Description" },
+  ]);
+
+  const [filter, setFilter] = useState({sort : "", query: ""})
+  const [modal, setModal] = useState(false);
+
+  const sortedPosts = useMemo(() => {
+    if (filter.sort) {
+      return [...posts].sort((a,b) => a[filter.sort].localeCompare(b[filter.sort]))
+    }
+    return posts;
+  }, [filter.sort, posts]) 
+
+  const sortedAndSearchedPosts = useMemo(() => {
+    return sortedPosts.filter(post => post.title.toLocaleLowerCase().includes(filter.query.toLocaleLowerCase()))
+  }, [filter.query, sortedPosts]);
+
+  const createPost = (newPost) => {
+    setPosts([...posts, newPost]);
+    setModal(false);
+  };
+  const removePost = (post) => {
+    setPosts(posts.filter(p => p.id !== post.id));
+  };
 
   return (
     <div className="App">
-      <PostList posts={posts} title="firlst list"/>
-      <PostList posts={posts} title="second list"/>
+      <MyButton onClick = {() => setModal(true)} style = {{marginTop: "30px"}}>
+        New post 
+      </MyButton>
+      <MyModal visible={modal} setVisible={setModal}>
+        <PostForm create={createPost} />
+      </MyModal>
+      <hr style={{margin: "15px 0"}}/>
+      <PostFilter
+        filter={filter}
+        setFilter={setFilter}
+      />
+        <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Posts list" />
     </div>
   );
 }
