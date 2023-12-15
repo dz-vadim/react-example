@@ -6,6 +6,7 @@
     border: 1px solid teal;
     cursor: pointer;
     border-radius: 0.5rem;
+    margin: 5px;
 }
 .deleteBtn {
     background: transparent;
